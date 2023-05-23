@@ -1,0 +1,47 @@
+1
+00:00:00,009 --> 00:00:01,450
+This is Detective Connor.
+
+2
+00:00:02,009 --> 00:00:03,400
+I'm almost there now.
+
+3
+00:00:04,000 --> 00:00:05,600
+Copy that.
+
+4
+00:00:05,800 --> 00:00:07,200
+How's the situation looking?
+
+5
+00:00:07,800 --> 00:00:09,400
+It's raining heavily out here
+
+6
+00:00:09,800 --> 00:00:12,100
+and I haven't seen anyone or anything yet.
+
+7
+00:00:13,100 --> 00:00:13,900
+Be careful.
+
+8
+00:00:14,300 --> 00:00:16,100
+We don't know what we're dealing with here.
+
+9
+00:00:16,800 --> 00:00:19,000
+Keep us updated on anything you find.
+
+10
+00:00:19,200 --> 00:00:19,900
+Got it.
+
+11
+00:00:20,500 --> 00:00:21,700
+I'm going to keep moving.
+
+12
+00:00:22,300 --> 00:00:23,500
+Connor out.

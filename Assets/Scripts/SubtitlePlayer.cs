@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using RichTextSubstringHelper;
@@ -8,17 +7,22 @@ namespace EasySubtitles
 {
     public class SubtitlePlayer : MonoBehaviour
     {
-        public enum Type
+        public enum Mode
         {
             Instant,
             CharacterByCharacter
         }
         // Inspector fields
+        [Header("Subtitles")]
+        [Tooltip("The subtitles file to play")]
         [SerializeField] private TextAsset _subtitles;
-        [SerializeField] private Type _type = Type.Instant;
+        [Tooltip("The mode of display")]
+        [SerializeField] private Mode _mode = Mode.Instant;
+        [Tooltip("The text component to display the subtitles")]
         [SerializeField] private TMP_Text _text;
 
         [Header("Audio")]
+        [Tooltip("The audio source that will be played with the subtitles")]
         [SerializeField] private AudioSource _audioSource;
 
         // Properties
@@ -41,10 +45,12 @@ namespace EasySubtitles
                 return;
 
             float time;
+            float duration;
             // if we have an audio source, we use it to get the time
             if (_audioSource != null && _audioSource.isPlaying)
             {
                 time = _audioSource.time;
+                duration = _audioSource.clip.length;
             }
             // otherwise we use an internal timer
             else
@@ -52,17 +58,18 @@ namespace EasySubtitles
                 timer += Time.deltaTime;
 
                 time = timer;
+                duration = parsedSubtitles.Duration;
             }
 
             // if we reached the end of the subtitles, we stop
-            if (time >= parsedSubtitles.Duration)
+            if (duration - time < 0.1f)
             {
                 Stop();
                 return;
             }
 
             // we get the subtitle at the current time
-            UpdateText(parsedSubtitles.GetSubtitleAt(timer));
+            UpdateText(parsedSubtitles.GetSubtitleAt(time));
         }
 
         /// <summary>
@@ -70,7 +77,6 @@ namespace EasySubtitles
         /// </summary>
         void UpdateText(Subtitle subtitle)
         {
-
             if (subtitle == currentSubtitle)
                 return;
 
@@ -78,11 +84,11 @@ namespace EasySubtitles
 
             _text.margin = new Vector4(subtitle.X1, subtitle.Y1, subtitle.X2, subtitle.Y2);
 
-            if (_type == Type.Instant)
+            if (_mode == Mode.Instant)
             {
                 _text.text = subtitle.Text;
             }
-            else if (_type == Type.CharacterByCharacter)
+            else if (_mode == Mode.CharacterByCharacter)
             {
                 StartCoroutine(PlayCharacterByCharacter(subtitle));
             }
@@ -112,14 +118,14 @@ namespace EasySubtitles
         /// <summary>
         /// Plays the subtitles using the given type
         /// </summary>
-        public void Play(Type type)
+        public void Play(Mode mode)
         {
             if (_subtitles == null)
             {
                 Debug.LogError("No subtitles assigned");
                 return;
             }
-            Play(_subtitles, type);
+            Play(_subtitles, mode);
         }
 
         /// <summary>
@@ -127,21 +133,21 @@ namespace EasySubtitles
         /// </summary>
         public void Play()
         {
-            Play(_type);
+            Play(_mode);
         }
 
         /// <summary>
         /// Plays the subtitles using the given subtitles text and type
         /// </summary>
-        public void Play(TextAsset subtitles, Type type)
+        public void Play(TextAsset subtitles, Mode mode)
         {
-            Play(subtitles, type, _audioSource);
+            Play(subtitles, mode, _audioSource);
         }
 
         /// <summary>
         /// Plays the subtitles using the given subtitles text, type and audio source
         /// </summary>
-        public void Play(TextAsset subtitles, Type type, AudioSource audioSource)
+        public void Play(TextAsset subtitles, Mode mode, AudioSource audioSource)
         {
             if (subtitles != _subtitles)
             {
@@ -156,7 +162,7 @@ namespace EasySubtitles
                 }
             }
 
-            _type = type;
+            _mode = mode;
             timer = 0;
 
             _audioSource = audioSource;
