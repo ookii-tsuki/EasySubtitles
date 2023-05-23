@@ -11,7 +11,7 @@ public class Subtitles : List<Subtitle>
     /// <summary>
     /// The length in seconds of the subtitle file
     /// </summary>
-    public float Length => this[this.Count - 1].End;
+    public float Duration => this[this.Count - 1].End;
 
     /// <summary>
     /// Creates a new instance of the Subtitles class
@@ -19,6 +19,10 @@ public class Subtitles : List<Subtitle>
     /// <param name="textAsset">The subtitle file</param>
     public Subtitles(TextAsset textAsset)
     {
+        if (textAsset == null)
+        {
+            throw new ArgumentNullException(nameof(textAsset));
+        }
         Parse(textAsset.text);
     }
 
@@ -44,7 +48,7 @@ public class Subtitles : List<Subtitle>
         {
             // Parse the block into its properties
             RegexOptions options = RegexOptions.Multiline;
-            var blockProperties = Regex.Match(line, @"^(\d+)\r?\n(\d{2}:\d{2}:\d{2},\d{3})\s-->\s(\d{2}:\d{2}:\d{2},\d{3})(?:\sX1:(\d+)\sX2:(\d+)\sY1:(\d+)\sY2:(\d+))?\r?\n([\S\s]+)$", options);
+            var blockProperties = Regex.Match(line, @"^(\d+)\r?\n(\d{2}:\d{2}:\d{2},\d{3})\s-->\s(\d{2}:\d{2}:\d{2},\d{3})(?:\sX1:(-?\d+)\sX2:(-?\d+)\sY1:(-?\d+)\sY2:(-?\d+))?\r?\n([\S\s]+)$", options);
             if (!blockProperties.Success)
             {
                 Debug.LogError("Invalid subtitle block: " + line);
@@ -97,11 +101,11 @@ public class Subtitles : List<Subtitle>
     /// </summary>
     /// <param name="time">The time to check</param>
     /// <returns>The subtitles that are active at the given time</returns>
-    public Subtitle[] GetSubtitlesAt(float time)
+    public Subtitle GetSubtitleAt(float time)
     {
-        var subtitles = this.FindAll(subtitle => subtitle.Start <= time && subtitle.End >= time);
+        var subtitle = this.Find(subtitle => subtitle.Start <= time && subtitle.End >= time);
 
-        return subtitles.ToArray();
+        return subtitle ?? Subtitle.Empty;
     }
 }
 
