@@ -107,7 +107,7 @@ namespace EasySubtitles
 
             var maker = new RichTextSubStringMaker(text); // we use a helper class by majecty to get the rich text substring
         
-            while (maker.IsConsumable())
+            while (maker.IsConsumable() && IsPlaying)
             {
                 maker.Consume();
                 _text.text = maker.GetRichText();
