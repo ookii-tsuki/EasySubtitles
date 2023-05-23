@@ -11,7 +11,7 @@ EasySubtitles is a Unity library that allows you to easily implement subtitles u
 
 ## Installation
 
-To install EasySubtitles, you can download the package from the [releases](https://github.com/yourusername/EasySubtitles/releases)
+To install EasySubtitles, you can download the package from the [releases](https://github.com/ookii-tsuki/EasySubtitles/releases/)
 
 ## Usage
 
